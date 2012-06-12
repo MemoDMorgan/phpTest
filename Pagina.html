@@ -1,0 +1,85 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" >
+            $(document).ready( function (){
+                //genero un evento focus, para mostrar el mensaje de la explicacion
+                /*$('.campo input').focus(function(){ //solo funciona con los input no con el texarea
+                    alert(this);
+                });*/
+                $('.campoexplicado').focus(function(){
+                    var campo=$(this);
+                    var nombrecampo=campo.attr("name");//Obtener el atributo name de la etiqueta que realizo el evento, attr puede acceder a cualqueir atributo de una etiqueta
+                    //alert(nombrecampo);
+                    var posicioncampo=campo.offset();//permite obtiene la posición top y el left de un elemento 
+                    var anchoCampo=campo.outerWidth();//obtener el ancho del campo contando el paddin y el border en px sin la margen, para colocar a la derecha de este campo la capa. 
+                    $('#explicacion' + nombrecampo).css({
+                        'display' : 'block',
+                        'top' : posicioncampo.top + 'px',
+                        'left': (posicioncampo.left + anchoCampo + 10) + 'px'
+                    }); //acceder a la div correspondiente por el nombre del identificador (id)
+                    
+                }
+            );
+                //Cuando se pierda el foco ocultar la capa evento blur pierde el foco
+                $('.campoexplicado').blur(function(){
+                    var nombrecampo=$(this).attr("name");//Obtener el atributo name de la etiqueta que realizo el evento, attr puede acceder a cualqueir atributo de una etiqueta
+                    //alert(nombrecampo);
+                    $('#explicacion' + nombrecampo).css('display','none'); //acceder a la div correspondiente por el nombre del identificador (id)
+                }
+            );
+            });
+        </script>
+        <style type="text/css">
+            .etiq{
+                width: 80px;/*se combina con el display block, para que se haga efectivo esta propiedad por defecto los labes son inline*/
+                display: block;/*se toma todo el ancho de la etiqueta */
+                float:left;/*Para que la etiqueta se acomode a la izquierda y la siguiente etiqueta a la derecha */
+            }
+            .campo{
+                margin-bottom: 10px;/*espacio al inferior de cada div*/
+            }
+            .explicacion{
+                border: solid 1px #aaf;
+                background-color: #ddf;
+                padding: 4px;/*Espacio (relleno) entre el borde y el texto del elemento*/
+                display: none;
+                position: absolute;/*Para que el elemento acepte las posiciones top y left*/
+            } 
+        </style>
+    </head>    
+    <body>
+        <form action="">
+            <div class="campo">
+                <label for="nombre" class="etiq" >Nombre:</label>
+                <input type="text" name="nombre" id="nombre" size="30" class="campoexplicado"/>
+            </div>
+            <div class="campo">
+                <label for="apellidos" class="etiq">Apellidos:</label>
+                <input type="text" name="apellido" id="apellidos" size="30" class="campoexplicado"/>
+            </div>
+            <div class="campo">
+                <label for="edad" class="etiq">Edad:</label>
+                <input type="text" name="edad" id="edad" size="30" class="campoexplicado"/>
+            </div>
+            <div class="campo">
+                <label for="edad" class="etiq">Comentario:</label>
+                <textarea name="comentario" id="comentario" rows="5" cols="30" class="campoexplicado">Escriba su comentario
+                </textarea>
+            </div>
+        </form>
+        <div id="explicacionnombre" class="explicacion">Escriba su nombre</div>
+        <div id="explicacionapellido" class="explicacion">Escriba sus Apellidos</div>
+        <div id="explicacionedad" class="explicacion">Escriba su Edad, mayor de 18 años</div>
+        <div id="explicacioncomentario" class="explicacion">Escriba su comentario</div>
+    </body>
+</html>

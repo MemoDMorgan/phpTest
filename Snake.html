@@ -1,0 +1,247 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" >
+            var nceldas=9;
+            var nn=" ";            
+            $(document).ready( function (){
+                pintarTablero();
+                
+                //pintar la celda aleatoria
+                var i=aleatorio(0,nceldas);
+                var j=aleatorio(0,nceldas);
+                //alert(i+","+j);
+                var id=""+i+j;
+                var celdaInicio=$('#'+id);
+                celdaInicio.removeClass('celda').addClass('celdaImagenAleatoria');                
+                
+                //pintar la celda de inicio, la que se va a mover   
+                var idd=""+i+j;                
+                do{
+                    var ii=aleatorio(0,nceldas);
+                    var jj=aleatorio(0,nceldas);
+                    //alert(i+","+j);
+                    idd=""+ii+jj;               
+                }
+                while(id==idd);
+                
+                celdaInicio=$('#'+idd);
+                celdaInicio.removeClass('celda').addClass('celdaImagen');
+                
+                //movimientoInicial arriba(0) derecho(1) abajo(2) izq(3) 
+                do {
+                    novalido=validarMovimiento(i,j,aleatorio(0,3));  
+                }while (novalido);               
+                
+                /*$("#00").click( function (){
+                    alert($(this).attr('id'));                
+                });*/
+                
+                celdaInicio=$(".celdaImagenAleatoria");                
+                
+                
+                for (k=0;k<50;k++){
+                    //celdaInicio.slideUp(300).delay(800).fadeIn(400);
+                    celdaInicio.fadeOut(100);
+                    //celdaInicio.delay(2000);
+                    celdaInicio.fadeIn(100);                     
+                    //console.log(nn);                    
+                }
+                
+                $(document).keydown(function (e){
+                    //console.log("codigo de tecla:", e.which);
+                    //arreglo para varias
+                    var celdaInicio=$(".celdaImagen");
+                    var i=celdaInicio.attr("id").substr(0, 1);
+                    var j=celdaInicio.attr("id").substr(1, 1);
+                    //hacer un split por si el id es de 2 cifras
+                    //alert(i+","+j+","+e.which);
+                    
+                    switch(e.which){
+                        case 38://arriba   
+                            if (!validarMovimiento(i,j,0)){
+                                celdaInicio.removeClass('celdaImagen').addClass('celda');
+                                var id=parseInt(i)-1;
+                                id=""+id+j;
+                                //nn=id;
+                                //alert(id);
+                                var celda=$('#'+id);
+                                celda.removeClass('celda').addClass('celdaImagen');    
+                                
+                                ee = $.Event('keydown');
+                                ee.which = e.which; // A    
+                                
+                                //for (k=0;k<50;k++){
+                                //celdaInicio.slideUp(300).delay(800).fadeIn(400);
+                                
+                                //celda.delay(1000);  
+                                //celda.timeout(1000);
+                                celda.hide(10000);                              
+                                celda.show(10000);                     
+                                //console.log(nn);                    
+                                //}
+                                
+                                $(document).trigger(e);
+                                
+                                //$(document).trigger('keypress');
+                            }                                                        
+                            break;
+                        case 40://abajo 
+                            if (!validarMovimiento(i,j,2)){
+                                celdaInicio.removeClass('celdaImagen').addClass('celda');
+                                var id=(parseInt(i))+1;
+                                id=""+id+j;
+                                //nn=id;
+                                //alert(id);
+                                var celda=$('#'+id);
+                                celda.removeClass('celda').addClass('celdaImagen');
+                            }
+                            
+                            break;
+                        case 39://der
+                            if (!validarMovimiento(i,j,1)){
+                                celdaInicio.removeClass('celdaImagen').addClass('celda');
+                                var id=parseInt(j)+1;
+                                id=""+(i)+id;
+                                //nn=id;
+                                //alert(id);
+                                var celda=$('#'+id);
+                                celda.removeClass('celda').addClass('celdaImagen');
+                            }                            
+                            break;
+                        case 37://izq
+                            if (!validarMovimiento(i,j,3)){
+                                celdaInicio.removeClass('celdaImagen').addClass('celda');
+                                var id=parseInt(j)-1;
+                                id=""+(i)+id;
+                                //nn=id;
+                                //alert(id);
+                                var celda=$('#'+id);
+                                celda.removeClass('celda').addClass('celdaImagen');
+                            }                            
+                            break;
+                    }
+                });
+                
+                
+           
+            });
+            
+            //arriba(0) derecho(1) abajo(2) izq(3) 
+            function validarMovimiento(i,j,movInicial){                
+                //alert(movInicial);
+                novalido=false;
+                //alert(""+i+","+j+","+movInicial);
+                if ((j==0 && movInicial==3) || (j==nceldas && movInicial==1) || (i==0 && movInicial==0) || (i==nceldas && movInicial==2) )
+                {                        
+                    novalido=true;    
+                    //alert("no valido");
+                }
+                    
+                return novalido;
+            }
+            
+            function pintarTablero(){
+                var ultimacelda=$("#cuerpo");
+                var celda= $("<div class='celda'></div>");                
+                for (i=0;i<nceldas+1;i++){                    
+                    for (j=0;j<nceldas+1;j++){
+                        var id =  ""+i + j;                        
+                        //alert(ultimacelda.attr("id"));
+                        celda.attr('id',id);   
+                        if(i==0 && j==0)
+                            ultimacelda.append(celda);
+                        else                                
+                            celda.insertAfter(ultimacelda);
+                        ultimacelda=$('#'+id);
+                        celda= ultimacelda.clone();
+                    }
+                    var espacio1= $("<br>");                    
+                    espacio1.attr('id',i);                    
+                    espacio1.insertAfter(ultimacelda);
+                    ultimacelda=$('#'+i);
+                    /*var espacio2= $("<br>");
+                    espacio2.attr('id',i+'b');                       
+                    espacio2.insertAfter(espacio1); 
+                    ultimacelda=$('#'+i+'b');*/               
+                }
+            }           
+           
+           
+            function aleatorio(inferior,superior){
+                numPosibilidades = superior - inferior
+                aleat = Math.random() * numPosibilidades
+                aleat = Math.round(aleat)
+                return parseInt(inferior) + aleat
+            } 
+           
+        </script>
+        <style type="text/css">      
+            .celda{
+                width: 18px;
+                height: 18px;                
+                float:left;                
+                border: solid 1px black;
+                /*                
+                text-align: left;                
+                background-image: url("cuadro2.jpg");
+                background-repeat:no-repeat;
+                */
+            }
+
+            .celdaImagen{
+                width: 18px;
+                height: 18px;                
+                float:left;       
+                border: solid 1px black;
+                /*
+                text-align: right;                
+                */                
+                background-image: url("cuadro2.jpg");
+                background-repeat:no-repeat;
+                background-position:center; 
+            }
+
+            .celdaImagenAleatoria{
+                width: 18px;
+                height: 18px;                
+                float:left;       
+                border: solid 1px black;
+                /*
+                text-align: right;                
+                */                
+                background-image: url("cuadro2.jpg");
+                background-repeat:no-repeat;
+                background-position:center; 
+            }
+
+        </style>
+    </head>
+    <body id="cuerpo">
+        <!--<div class="celda" id="00">1</div>
+                <div id="tablero">
+        <div class="celda2" id="00"></div>
+        <div class="celda2" id="01">            
+        </div>
+        <div class="celda2" id="02">            
+        </div>                
+        <br>          
+        <div class="celda2" id="10">            
+        </div>
+        <div class="celda" id="11">
+            <img src="cuadro2.jpg" width="18" height="18" alt="cuadro" />
+        </div>
+        <div class="celda" id="12">
+            <img src="cuadro2.jpg" width="18" height="18" alt="cuadro" />
+        </div>
+        <!--</div>-->
+        <input type="hidden" name="movimientoActual" id="movimientoActual" value="0" />
+    </body>
+</html>
